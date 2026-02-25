@@ -2716,7 +2716,7 @@
                 </svg>
             </div>
             <div>
-                <span class="logo-name"><em>VOLT</em>GARAGE</span>
+                <span class="logo-name"><em>VOLT</em>GARAG</span>
                 <span class="logo-tag">Electric Vehicle Parts</span>
             </div>
         </a>
