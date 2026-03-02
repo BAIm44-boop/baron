@@ -2726,10 +2726,12 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="#produk">Produk</a></li>
                 <li>
+                    @if(Auth::check() && Auth::user()->role == 'Guest')
                     <button class="cart-nav-btn" onclick="toggleCart()" title="Keranjang Belanja">
                         <i class="bi bi-bag-fill"></i> Keranjang
                         <span class="cart-nav-badge" id="cartNavBadge">0</span>
                     </button>
+                     @endif
                 </li>
                 @if(!Auth::check())
                     <li><a href="/admin" class="btn-nav-login">Login</a></li>
@@ -2798,20 +2800,6 @@
                     </a>
                 </div>
 
-                <div class="stats-row">
-                    <div class="stat-cell">
-                        <div class="stat-num">500<sup>+</sup></div>
-                        <div class="stat-lbl">Jenis Produk</div>
-                    </div>
-                    <div class="stat-cell">
-                        <div class="stat-num">10K<sup>+</sup></div>
-                        <div class="stat-lbl">Pelanggan EV</div>
-                    </div>
-                    <div class="stat-cell">
-                        <div class="stat-num">5<sup>★</sup></div>
-                        <div class="stat-lbl">Rating Toko</div>
-                    </div>
-                </div>
             </div>
 
             <!-- RIGHT — EV CAR SVG -->
@@ -3286,6 +3274,7 @@
                                             <i class="bi bi-cart-plus-fill"></i> Beli
                                         </button>
                                     @endif
+                                    @if(Auth::check() && Auth::user()->role == 'Guest')
                                     <button class="o-btn"
                                         style="background:rgba(0,245,212,0.12);border:1px solid rgba(0,245,212,0.35);color:var(--volt);"
                                         data-add-cart data-id="{{ $p->id }}" data-nama="{{ addslashes($p->nama) }}"
@@ -3294,6 +3283,7 @@
                                         data-img="{{ asset('storage/' . $p->image) }}">
                                         <i class="bi bi-bag-plus-fill"></i> Keranjang
                                     </button>
+                                     @endif
                                 </div>
                             </div>
                             <div class="p-body">
@@ -3491,6 +3481,7 @@
         const fltList = document.getElementById('fltList');
         const allCards = document.querySelectorAll('.p-card');
 
+
         fltList.querySelectorAll('li').forEach(btn => {
             btn.addEventListener('click', function () {
                 fltList.querySelectorAll('li').forEach(b => b.classList.remove('active'));
@@ -3537,11 +3528,13 @@
         /* ══════════════════════════════════
            CART SYSTEM
         ══════════════════════════════════ */
-        let cart = JSON.parse(localStorage.getItem('ev_cart') || '[]');
+        const CART_KEY = 'voltara_cart_{{ Auth::id() }}';
+            let cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
 
-        function saveCart() {
-            localStorage.setItem('ev_cart', JSON.stringify(cart));
-        }
+            function saveCart() {
+                localStorage.setItem(CART_KEY, JSON.stringify(cart));
+                updateCartUI();
+            }
 
         function addToCart(id, nama, tipe, jenis, harga, stok, imgUrl) {
             const existing = cart.find(i => i.id === id);
